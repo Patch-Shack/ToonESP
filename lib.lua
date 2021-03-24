@@ -1,0 +1,308 @@
+--[[
+
+PlayerESP(Player, OUTLINE COLOR;Color3.fromRGB in a table, TEXT COLOR;Color3.fromRGB in a table)
+
+NPCESP(NPC aka Model in Workspace btw, OUTLINE COLOR;Color3.fromRGB in a table, TEXT COLOR;Color3.fromRGB in a table, CUSTOM NAME)
+
+PartESP(Path to Part, OUTLINE COLOR;Color3.fromRGB in a table, TEXT COLOR;Color3.fromRGB in a table, CUSTOM NAME)
+
+ToggleESP(bool) true or false btw
+
+NotifyReady() send a notification once the esp loaded, u dont have to run this tho
+
+
+EXAMPLES:
+
+
+PlayerESP(Player, {255, 255, 255}, {255, 255, 255})
+
+NPCESP(workspace.NPCs.SellKeeper, {255, 255, 255}, {255, 255, 255}, "Seller")
+
+PartESP(workspace.Part, {255, 255, 255}, {255, 255, 255}, "Burger")
+
+ToggleESP(true) -- already set to true by default
+
+]]--
+
+local esplib = {}
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+local worldToViewportPoint = Camera.worldToViewportPoint
+
+local HeadOff = Vector3.new(0, 0.5, 0)
+local LegOff = Vector3.new(0, 3, 0)
+local espEnabled = true
+
+local function ToggleESP(bool)
+	if bool == true then
+		espEnabled = true
+	else
+		espEnabled = false
+	end
+end
+
+local function NotifyReady()
+	game:GetService("StarterGui"):SetCore("SendNotification",{
+		Title = "Toon ESP";
+		Text = "✔";
+	})
+end
+
+local function PlayerESP(v, colorgiven, namecolgiven)
+	local OutlineColor = nil
+	local NameColor = nil
+	
+	if colorgiven ~= nil or colorgiven ~= {} then
+		OutlineColor = Color3.new(colorgiven[1]/255, colorgiven[2]/255, colorgiven[3]/255)
+	else
+		OutlineColor = Color3.new(0, 0, 0)
+	end
+	
+	if namecolgiven ~= nil or namecolgiven ~= {} then
+		NameColor = Color3.new(colorgiven[1]/255, colorgiven[2]/255, colorgiven[3]/255)
+	else
+		NameColor = Color3.new(1, 1, 1)
+	end
+	
+	local BoxOutline = Drawing.new("Square")
+	BoxOutline.Visible = false
+	BoxOutline.Color = OutlineColor
+	BoxOutline.Thickness = 3
+	BoxOutline.Transparency = 1
+	BoxOutline.Filled = false
+	
+	local Box = Drawing.new("Square")
+	Box.Visible = false
+	Box.Color = Color3.new(1, 1, 1)
+	Box.Thickness = 1
+	Box.Transparency = 1
+	Box.Filled = false
+	
+	local Name = Drawing.new("Text")
+	Name.Visible = false
+	Name.Text = v.Name
+	Name.Size = 16
+	Name.Color = NameColor
+	Name.Center = true
+	Name.Outline = true
+	
+	function boxesp()
+		game:GetService("RunService").RenderStepped:Connect(function()
+			if v.Character ~= nil and v.Character:FindFirstChildOfClass("Humanoid") ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil and v ~= LocalPlayer and v.Character:FindFirstChildOfClass("Humanoid").Health > 0 then
+				if espEnabled then
+					local Vector, onScreen = Camera:worldToViewportPoint(v.Character.HumanoidRootPart.Position)
+					
+					local RootPart = v.Character.HumanoidRootPart
+					local Head = v.Character.Head
+					local RootPosition, RootVis = worldToViewportPoint(Camera, RootPart.Position)
+					local HeadPosition = worldToViewportPoint(Camera, Head.Position + HeadOff)
+					local LegPosition = worldToViewportPoint(Camera, RootPart.Position - LegOff)
+					
+					if onScreen then
+						BoxOutline.Size = Vector2.new(1000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
+						BoxOutline.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
+						BoxOutline.Visible = true
+					
+						Box.Size = Vector2.new(1000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
+						Box.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
+						Box.Visible = true
+						
+						Name.Position = Vector2.new(RootPosition.X, (RootPosition.Y + Box.Size.Y / 2) - 25)
+						Name.Visible = true
+					else
+						BoxOutline.Visible = false
+						Box.Visible = false
+						Name.Visible = false
+					end
+				else
+					BoxOutline.Visible = false
+					Box.Visible = false
+					Name.Visible = false
+				end
+			else
+				BoxOutline.Visible = false
+				Box.Visible = false
+				Name.Visible = false
+			end
+		end)
+	end
+	coroutine.wrap(boxesp)()
+end
+
+local function NPCESP(v, colorgiven, namecolgiven, newname)
+	local OutlineColor = nil
+	local NameColor = nil
+	local CustomName = nil
+	
+	if colorgiven ~= nil or colorgiven ~= {} then
+		OutlineColor = Color3.new(colorgiven[1]/255, colorgiven[2]/255, colorgiven[3]/255)
+	else
+		OutlineColor = Color3.new(0, 0, 0)
+	end
+	
+	if namecolgiven ~= nil or namecolgiven ~= {} then
+		NameColor = Color3.new(colorgiven[1]/255, colorgiven[2]/255, colorgiven[3]/255)
+	else
+		NameColor = Color3.new(1, 1, 1)
+	end
+	
+	if newname ~= nil or newname ~= {} then
+		CustomName = newname
+	else
+		CustomName = v.Name
+	end
+	
+	local BoxOutline = Drawing.new("Square")
+	BoxOutline.Visible = false
+	BoxOutline.Color = OutlineColor
+	BoxOutline.Thickness = 3
+	BoxOutline.Transparency = 1
+	BoxOutline.Filled = false
+	
+	local Box = Drawing.new("Square")
+	Box.Visible = false
+	Box.Color = Color3.new(1, 1, 1)
+	Box.Thickness = 1
+	Box.Transparency = 1
+	Box.Filled = false
+	
+	local Name = Drawing.new("Text")
+	Name.Visible = false
+	Name.Text = CustomName
+	Name.Size = 16
+	Name.Color = NameColor
+	Name.Center = true
+	Name.Outline = true
+	
+	function boxesp()
+		game:GetService("RunService").RenderStepped:Connect(function()
+			if v:FindFirstChildOfClass("Humanoid") ~= nil and v:FindFirstChild("HumanoidRootPart") ~= nil and v:FindFirstChildOfClass("Humanoid").Health > 0 then
+				if espEnabled then
+					local Vector, onScreen = Camera:worldToViewportPoint(v.HumanoidRootPart.Position)
+					
+					local RootPart = v.HumanoidRootPart
+					local Head = v.Head
+					local RootPosition, RootVis = worldToViewportPoint(Camera, RootPart.Position)
+					local HeadPosition = worldToViewportPoint(Camera, Head.Position + HeadOff)
+					local LegPosition = worldToViewportPoint(Camera, RootPart.Position - LegOff)
+					
+					if onScreen then
+						BoxOutline.Size = Vector2.new(1000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
+						BoxOutline.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
+						BoxOutline.Visible = true
+					
+						Box.Size = Vector2.new(1000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
+						Box.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
+						Box.Visible = true
+						
+						Name.Position = Vector2.new(RootPosition.X, (RootPosition.Y + Box.Size.Y / 2) - 25)
+						Name.Visible = true
+					else
+						BoxOutline.Visible = false
+						Box.Visible = false
+						Name.Visible = false
+					end
+				else
+					BoxOutline.Visible = false
+					Box.Visible = false
+					Name.Visible = false
+				end
+			else
+				BoxOutline.Visible = false
+				Box.Visible = false
+				Name.Visible = false
+			end
+		end)
+	end
+	coroutine.wrap(boxesp)()
+end
+
+local function PartESP(v, colorgiven, namecolgiven, newname)
+	local OutlineColor = nil
+	local NameColor = nil
+	local CustomName = nil
+	
+	if colorgiven ~= nil or colorgiven ~= {} then
+		OutlineColor = Color3.new(colorgiven[1]/255, colorgiven[2]/255, colorgiven[3]/255)
+	else
+		OutlineColor = Color3.new(0, 0, 0)
+	end
+	
+	if namecolgiven ~= nil or namecolgiven ~= {} then
+		NameColor = Color3.new(colorgiven[1]/255, colorgiven[2]/255, colorgiven[3]/255)
+	else
+		NameColor = Color3.new(1, 1, 1)
+	end
+
+	if newname ~= nil or newname ~= {} then
+		CustomName = newname
+	else
+		CustomName = v.Name
+	end
+	
+	local BoxOutline = Drawing.new("Square")
+	BoxOutline.Visible = false
+	BoxOutline.Color = OutlineColor
+	BoxOutline.Thickness = 3
+	BoxOutline.Transparency = 1
+	BoxOutline.Filled = false
+	
+	local Box = Drawing.new("Square")
+	Box.Visible = false
+	Box.Color = Color3.new(1, 1, 1)
+	Box.Thickness = 1
+	Box.Transparency = 1
+	Box.Filled = false
+	
+	local Name = Drawing.new("Text")
+	Name.Visible = false
+	Name.Text = CustomName
+	Name.Size = 16
+	Name.Color = NameColor
+	Name.Center = true
+	Name.Outline = true
+	
+	function boxesp()
+		game:GetService("RunService").RenderStepped:Connect(function()
+			if espEnabled then
+				local Vector, onScreen = Camera:worldToViewportPoint(v.Position)
+				
+				local RootPosition, RootVis = worldToViewportPoint(Camera, v.Position)
+				local HeadPosition = worldToViewportPoint(Camera, v.Position + HeadOff)
+				local LegPosition = worldToViewportPoint(Camera, v.Position - LegOff)
+				
+				if onScreen then
+					BoxOutline.Size = Vector2.new(1000 / RootPosition.Z, RootPosition.Y - LegPosition.Y)
+					BoxOutline.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
+					BoxOutline.Visible = true
+					
+					Box.Size = Vector2.new(1000 / RootPosition.Z, RootPosition.Y - LegPosition.Y)
+					Box.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
+					Box.Visible = true
+					
+					Name.Position = Vector2.new(RootPosition.X, (RootPosition.Y + Box.Size.Y / 2) - 25)
+					Name.Visible = true
+				else
+					BoxOutline.Visible = false
+					Box.Visible = false
+					Name.Visible = false
+				end
+			else
+				BoxOutline.Visible = false
+				Box.Visible = false
+				Name.Visible = false
+			end
+		end)
+	end
+	coroutine.wrap(boxesp)()
+end
+
+esplib.PlayerESP = PlayerESP
+esplib.NPCESP = NPCESP
+esplib.PartESP = PartESP
+esplib.ToggleESP = ToggleESP
+esplib.NotifyReady = NotifyReady
+
+return esplib
