@@ -2,7 +2,9 @@ local ESP = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Patc
 local Players = game:GetService("Players")
 
 for i,v in pairs(Players:GetChildren()) do
-	ESP.PlayerESP(v, {112, 235, 165}, {112, 235, 165})
+	if v ~= Players.LocalPlayer then
+		ESP.PlayerESP(v, {112, 235, 165}, {112, 235, 165})
+	end
 end
 
 for _, a in pairs(workspace.NPCs:GetChildren()) do
