@@ -190,14 +190,14 @@ local function PlayerESP(v, colorgiven, namecolgiven)
 						if v.Team == nil then
 							Name.Text = v.Name .. " [None]"
 						else
-							Name.Text = v.Name .. " [" .. v.Team .. "]"
+							Name.Text = v.Name .. " [" .. v.Team.Name .. "]"
 						end
 					elseif distanceEnabled == true and teamName == true then
 						local pos = math.floor((GetRoot(LocalPlayer.Character).Position - GetRoot(v.Character).Position).magnitude)
 						if v.Team == nil then
 							Name.Text = v.Name .. " [None] " .. "[" .. pos .. " Studs]"
 						else
-							Name.Text = v.Name .. " [" .. v.Team .. "] " .. "[" .. pos .. " Studs]"
+							Name.Text = v.Name .. " [" .. v.Team.Name .. "] " .. "[" .. pos .. " Studs]"
 						end
 					else
 						Name.Text = v.Name
