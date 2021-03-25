@@ -22,7 +22,7 @@ NotifyReady() send a notification once the esp loaded, u dont have to run this t
 EXAMPLES:
 
 
-local ESP = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Patch-Shack/ToonESP/main/lib2.lua"))();
+local ESP = loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Patch-Shack/ToonESP/main/lib3.lua"))();
 
 ESP.ToggleESP(true)
 
@@ -36,7 +36,7 @@ ESP.SetupPlayers({255, 255, 255}, {255, 255, 255})
 
 ESP.PlayerESP(Player, {255, 255, 255}, {255, 255, 255})
 
-ESP.NPCESP(workspace.NPCs.SellKeeper, {255, 255, 255}, {255, 255, 255}, "Seller")
+ESP.NPCESP(workspace.NPCs.ShopKeeper, {255, 255, 255}, {255, 255, 255}, "Seller")
 
 ESP.PartESP(workspace.Part, {255, 255, 255}, {255, 255, 255}, "Burger")
 
