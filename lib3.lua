@@ -175,8 +175,8 @@ local function PlayerESP(v, colorgiven, namecolgiven)
 							Box.Visible = false
 							Name.Visible = false
 						else
-							BoxOutline.Color = Color3.new(v.TeamColor.r/255, v.TeamColor.g/255, v.TeamColor.b/255)
-							Name.Color = Color3.new(v.TeamColor.r/255, v.TeamColor.g/255, v.TeamColor.b/255)
+							BoxOutline.Color = v.TeamColor.Color --Color3.new(v.TeamColor.r/255, v.TeamColor.g/255, v.TeamColor.b/255)
+							Name.Color = v.TeamColor.Color --Color3.new(v.TeamColor.r/255, v.TeamColor.g/255, v.TeamColor.b/255)
 						end
 					else
 						BoxOutline.Color = OutlineColor
