@@ -32,15 +32,17 @@ for i,v in pairs(workspace.FunctionalDoors.Door:GetChildren()) do
 		ESP2.PartESP(v, {213, 70, 235}, {213, 70, 235}, "Elevator")
 	end
 end
-for i,v in pairs(workspace.Map:GetChildren()) do
-	if v.Name == "Gate A" or v.Name == "Gate B" then
-		ESP3.PartESP(v, {197, 109, 210}, {197, 109, 210}, v.Name)
+for i,v in pairs(workspace.Map["Gate A"]:GetChildren()) do
+	if v:IsA("Part") or v:IsA("BasePart") then
+		ESP3.PartESP(v, {197, 109, 210}, {197, 109, 210}, "Gate A")
+	end
+end
+for i,v in pairs(workspace.Map["Gate B"]:GetChildren()) do
+	if v:IsA("Part") or v:IsA("BasePart") then
+		ESP3.PartESP(v, {197, 109, 210}, {197, 109, 210}, "Gate B")
 	end
 end
 Main:newBtn("ESP", function(bool)
-	ESP.ToggleESP(bool)
-end, false)
-Main:newBtn("Elevators", function(bool)
 	ESP.ToggleESP(bool)
 end, false)
 Main:newBtn("Team Check", function(bool)
