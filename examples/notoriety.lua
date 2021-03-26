@@ -46,7 +46,7 @@ UIS.InputEnded:Connect(function(inp)
 end)
 game:GetService("RunService").RenderStepped:Connect(function()
 	if Aiming then
-		Camera.CFrame = CFrame.new(Camera.CFrame.Position, ClosetPlayer().Character.Torso.Position)
+		Camera.CFrame = CFrame.new(Camera.CFrame.Position, ClosetCop().Character.Torso.Position)
 	end
 end)
 Lib:SetCategory(Main)
