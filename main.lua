@@ -18,6 +18,7 @@ local Games = {
 	["Identity Fraud 2"] = 495415914,
 	["rBreach"] = 2622527242,
 	["Notoriety"] = 21532277,
+	["The Rake"] = 2413927524,
 }
 
 if game.PlaceId == Games["Identity Fraud"] then
@@ -32,6 +33,9 @@ elseif game.PlaceId == Games["rBreach"] then
 elseif game.PlaceId == Games["Notoriety"] then
 	loadstr("notoriety")
 	TNotify("Notoriety")
+elseif game.PlaceId == Games["The Rake"] then
+	loadstr("rake")
+	TNotify("The Rake")
 else
 	UniversalScript()
 	TNotify("Universal")
