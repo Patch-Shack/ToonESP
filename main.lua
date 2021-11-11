@@ -1,15 +1,15 @@
-local function TNotify(t)
-	game:GetService("StarterGui"):SetCore("SendNotification",{
-		Title = "Toon ESP";
-		Text = t;
+local TNotify = function(t)
+	game:GetService("StarterGui"):SetCore("SendNotification", {
+		Title = "Toon ESP",
+		Text = tostring(t)
 	})
 end
 
-local function loadstr(url)
+local loadstr = function(url)
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Patch-Shack/ToonESP/main/examples/" .. url .. ".lua"))();
 end
 
-local function UniversalScript()
+local UniversalScript = function()
 	loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/Patch-Shack/ToonESP/main/universal.lua"))();
 end
 
@@ -19,6 +19,7 @@ local Games = {
 	["rBreach"] = 2622527242,
 	["Notoriety"] = 21532277,
 	["The Rake"] = 2413927524,
+	["Sharkbite"] = 734159876
 }
 
 if game.PlaceId == Games["Identity Fraud"] then
@@ -36,6 +37,9 @@ elseif game.PlaceId == Games["Notoriety"] then
 elseif game.PlaceId == Games["The Rake"] then
 	loadstr("rake")
 	TNotify("The Rake")
+elseif game.PlaceId == Games["Sharkbite"] then
+	loadstr("sharkbite")
+	TNotify("Sharkbite")
 else
 	UniversalScript()
 	TNotify("Universal")
