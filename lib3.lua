@@ -410,10 +410,110 @@ local function PartESP(v, colorgiven, namecolgiven, newname)
 	coroutine.wrap(boxesp)()
 end
 
+local function PartESP2(v, colorgiven, namecolgiven, newname)
+	local OutlineColor = nil
+	local NameColor = nil
+	local CustomName = nil
+	local isEnabled = true
+	
+	if colorgiven ~= nil or colorgiven ~= {} then
+		OutlineColor = Color3.new(colorgiven[1]/255, colorgiven[2]/255, colorgiven[3]/255)
+	else
+		OutlineColor = Color3.new(0, 0, 0)
+	end
+	
+	if namecolgiven ~= nil or namecolgiven ~= {} then
+		NameColor = Color3.new(colorgiven[1]/255, colorgiven[2]/255, colorgiven[3]/255)
+	else
+		NameColor = Color3.new(1, 1, 1)
+	end
+
+	if newname ~= nil or newname ~= {} then
+		CustomName = newname
+	else
+		CustomName = v.Name
+	end
+	
+	local BoxOutline = Drawing.new("Square")
+	BoxOutline.Visible = false
+	BoxOutline.Color = OutlineColor
+	BoxOutline.Thickness = 3
+	BoxOutline.Transparency = 1
+	BoxOutline.Filled = false
+	
+	local Box = Drawing.new("Square")
+	Box.Visible = false
+	Box.Color = Color3.new(1, 1, 1)
+	Box.Thickness = 1
+	Box.Transparency = 1
+	Box.Filled = false
+	
+	local Name = Drawing.new("Text")
+	Name.Visible = false
+	Name.Text = CustomName
+	Name.Size = 16
+	Name.Color = NameColor
+	Name.Center = true
+	Name.Outline = true
+	
+	function boxesp()
+		game:GetService("RunService").RenderStepped:Connect(function()
+			if isEnabled == false then
+				BoxOutline.Visible = false
+				Box.Visible = false
+				Name.Visible = false
+				return
+			end
+			if espEnabled then
+				local Vector, onScreen = Camera:worldToViewportPoint(v.Position)
+				
+				local RootPosition, RootVis = worldToViewportPoint(Camera, v.Position)
+				local HeadPosition = worldToViewportPoint(Camera, v.Position + HeadOff)
+				local LegPosition = worldToViewportPoint(Camera, v.Position - LegOff)
+				
+				if onScreen then
+					BoxOutline.Size = Vector2.new(1000 / RootPosition.Z, RootPosition.Y - LegPosition.Y)
+					BoxOutline.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
+					BoxOutline.Visible = true
+					
+					Box.Size = Vector2.new(1000 / RootPosition.Z, RootPosition.Y - LegPosition.Y)
+					Box.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
+					Box.Visible = true
+					
+					Name.Position = Vector2.new(RootPosition.X, (RootPosition.Y + Box.Size.Y / 2) - 25)
+					Name.Visible = true
+				else
+					BoxOutline.Visible = false
+					Box.Visible = false
+					Name.Visible = false
+				end
+				
+				if distanceEnabled then
+					local pos = math.floor((GetRoot(LocalPlayer.Character).Position - v.Position).magnitude)
+					Name.Text = CustomName .. " [" .. pos .. " Studs]"
+				else
+					Name.Text = CustomName
+				end
+			else
+				BoxOutline.Visible = false
+				Box.Visible = false
+				Name.Visible = false
+			end
+		end)
+	end
+	coroutine.wrap(boxesp)()
+	return {
+		["RemoveESP"] = function()
+			isEnabled = false
+		end
+	}
+end
+
 esplib.SetupPlayers = SetupPlayers
 esplib.PlayerESP = PlayerESP
 esplib.NPCESP = NPCESP
 esplib.PartESP = PartESP
+esplib.PartESP2 = PartESP2
 esplib.ToggleESP = ToggleESP
 esplib.ToggleTeamCheck = ToggleTeamCheck
 esplib.ToggleDistance = ToggleDistance
