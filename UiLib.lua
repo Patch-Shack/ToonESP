@@ -108,7 +108,8 @@ mainFrame.topBarFrame.miniBtn.MouseButton1Click:Connect(function()
 end);
 
 inputService.InputBegan:Connect(function(input, onGui)
-    if not onGui and (input.KeyCode == Enum.KeyCode.P or input.KeyCode == Enum.KeyCode.RightShift) then
+    -- if not onGui and (input.KeyCode == Enum.KeyCode.P or input.KeyCode == Enum.KeyCode.RightShift) then
+       if not onGui and (input.KeyCode == Enum.KeyCode.RightShift) then
         owlLibGui.Enabled = not owlLibGui.Enabled;
     end;
 end);
