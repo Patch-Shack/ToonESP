@@ -1,3 +1,22 @@
+if not isfolder("Toon_ESP") then
+    makefolder("Toon_ESP")
+end
+
+local ParentGui = function(Gui)
+	Gui.Name = string.gsub(string.gsub(game:GetService("HttpService"):GenerateGUID(false), "-", ""), 1, math.random(25, 30))
+	if (not is_sirhurt_closure) and (syn and syn.protect_gui) then
+		syn.protect_gui(Gui)
+		Gui.Parent = game:GetService("CoreGui")
+	elseif get_hidden_gui or gethui then
+		local HiddenUI = get_hidden_gui or gethui
+		Gui.Parent = HiddenUI()
+	elseif game:GetService("CoreGui"):FindFirstChild("RobloxGui") then
+		Gui.Parent = game:GetService("CoreGui")["RobloxGui"]
+	else
+		Gui.Parent = game:GetService("CoreGui")
+	end
+end
+
 local OwlLib = {Content = {}};
 local config = {};
 
@@ -5,24 +24,22 @@ local placeID = tostring(game.PlaceId);
 local httpService = game:GetService("HttpService");
 
 pcall(function()
-    config = httpService:JSONDecode(readfile("TOONESP_" .. placeID .. ".txt"));
+    config = httpService:JSONDecode(readfile("Toon_ESP/" .. placeID .. ".json"));
 end);
 
 local function saveConfig()
-    writefile("TOONESP_" .. placeID .. ".txt", httpService:JSONEncode(config));
+    writefile("Toon_ESP/" .. placeID .. ".json", httpService:JSONEncode(config));
 end;
 
 local oldScript = script;
 local popupGui = game:GetObjects("rbxassetid://4743303040")[1];
-popupGui.Parent = game:GetService("CoreGui");
-popupGui.Name = httpService:GenerateGUID(false);
+ParentGui(popupGui);
 script = popupGui.mainScript;
 local popup = loadstring(popupGui.mainScript.Source)();
 script = oldScript;
 
 local owlLibGui = game:GetObjects("rbxassetid://6564721426")[1];
-owlLibGui.Parent = game:GetService("CoreGui");
-owlLibGui.Name = httpService:GenerateGUID(false);
+ParentGui(owlLibGui);
 local mainFrame = owlLibGui.mainFrame;
 
 local tweenService = game:GetService("TweenService");
